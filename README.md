@@ -32,14 +32,14 @@ docker-compose up -d
 ### 4. Access the Application
 Open your browser and navigate to http://localhost:8080 to view the application.
 
-
 ### Stopping the Application
 To stop the running Docker containers, use:
 ```bash
-docker-compose down
+docker container ls
+docker stop [container id]
 ```
 ### Cleaning Up
-To remove the Docker image, use:
+To remove the Docker image and container, use:
 ```bash
 docker image ls
 docker rmi [image id]

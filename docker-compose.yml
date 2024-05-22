@@ -1,0 +1,11 @@
+version: '3.8'
+
+services:
+  web:
+    image: vuejs-mock-server:latest
+    container_name: vuejs_mock_server
+    build: .
+    ports:
+      - "8080:2250"
+    volumes:
+      - ./project:/usr/src/app

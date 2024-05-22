@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Vue.js CDN Example</title>
+  <!-- Vue.js 3.x CDN -->
+  <script src="https://unpkg.com/vue@next"></script>
+  <!-- Mock Server -->
+  <script src="mock_server.js"></script>
+</head>
+<body>
+  <div id="app">
+    <api-call></api-call>
+  </div>
+
+  <!-- config.js -->
+  <script src="config.js" type="module"></script>
+
+  <!-- api_call.js -->
+  <script type="module">
+    import { createApp } from 'https://unpkg.com/vue@next';
+    import api_call from './components/api_call.js';
+
+    const app = createApp({});
+    app.component('api-call', api_call);
+    app.mount('#app');
+  </script>
+</body>
+</html>

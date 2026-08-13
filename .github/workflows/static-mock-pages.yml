@@ -1,0 +1,60 @@
+name: Static Mock API Pages
+
+on:
+  pull_request:
+    paths:
+      - 'pages/**'
+      - '.github/workflows/static-mock-pages.yml'
+  push:
+    branches:
+      - main
+    paths:
+      - 'pages/**'
+      - '.github/workflows/static-mock-pages.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: pages
+  cancel-in-progress: true
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Validate mock JSON
+        run: |
+          python -m json.tool pages/api/health/index.json > /dev/null
+          python -m json.tool pages/api/users/1/index.json > /dev/null
+
+  deploy:
+    if: github.event_name != 'pull_request'
+    needs: validate
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - uses: actions/checkout@v4
+      - name: Prepare static API site
+        run: |
+          mkdir -p _site/api/health _site/api/users/1
+          cp pages/api/health/index.json _site/api/health/index.json
+          cp pages/api/health/index.json _site/api/health/index.html
+          cp pages/api/users/1/index.json _site/api/users/1/index.json
+          cp pages/api/users/1/index.json _site/api/users/1/index.html
+          touch _site/.nojekyll
+      - name: Configure Pages
+        uses: actions/configure-pages@v5
+      - name: Upload Pages artifact
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: _site
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4

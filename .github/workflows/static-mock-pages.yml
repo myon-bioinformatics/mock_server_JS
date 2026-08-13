@@ -31,6 +31,7 @@ jobs:
         run: |
           python -m json.tool pages/api/health/index.json > /dev/null
           python -m json.tool pages/api/users/1/index.json > /dev/null
+          python -m json.tool pages/scenarios.json > /dev/null
 
   deploy:
     if: github.event_name != 'pull_request'
@@ -48,6 +49,7 @@ jobs:
           cp pages/api/health/index.json _site/api/health/index.html
           cp pages/api/users/1/index.json _site/api/users/1/index.json
           cp pages/api/users/1/index.json _site/api/users/1/index.html
+          cp pages/scenarios.json _site/scenarios.json
           touch _site/.nojekyll
       - name: Configure Pages
         uses: actions/configure-pages@v5

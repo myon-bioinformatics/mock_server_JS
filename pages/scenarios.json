@@ -1,0 +1,98 @@
+{
+  "api": {
+    "get": {
+      "label": "GET",
+      "request": "GET /api/health",
+      "simulatedStatus": 200,
+      "response": { "status": "ok", "service": "mock_server_JS" }
+    },
+    "post": {
+      "label": "POST",
+      "request": "POST /api/echo",
+      "simulatedStatus": 200,
+      "requestBody": { "message": "hello from Flutter" },
+      "response": { "received": { "message": "hello from Flutter" }, "method": "POST" }
+    },
+    "timeout": {
+      "label": "Timeout",
+      "request": "GET /api/timeout",
+      "simulatedStatus": 408,
+      "delayMs": 2500,
+      "response": { "error": "timeout", "message": "Simulated client timeout." }
+    },
+    "unauthorized": {
+      "label": "401",
+      "request": "GET /api/unauthorized",
+      "simulatedStatus": 401,
+      "response": { "error": "unauthorized", "message": "Mock authentication required." }
+    },
+    "serverError": {
+      "label": "500",
+      "request": "GET /api/server-error",
+      "simulatedStatus": 500,
+      "response": { "error": "server_error", "message": "Intentional mock failure." }
+    }
+  },
+  "mcp": {
+    "toolList": {
+      "label": "tool list",
+      "request": "GET /mcp/tools",
+      "simulatedStatus": 200,
+      "response": {
+        "tools": [
+          {
+            "name": "weather_lookup",
+            "description": "Return mock weather for a city.",
+            "inputSchema": {
+              "type": "object",
+              "properties": { "city": { "type": "string" } },
+              "required": ["city"]
+            }
+          }
+        ]
+      }
+    },
+    "toolCall": {
+      "label": "tool call",
+      "request": "POST /mcp/call",
+      "simulatedStatus": 200,
+      "requestBody": { "name": "weather_lookup", "arguments": { "city": "Tokyo" } },
+      "response": {
+        "tool": "weather_lookup",
+        "isError": false,
+        "content": [{ "type": "text", "text": "Mock weather for Tokyo: sunny, 24°C" }]
+      }
+    },
+    "success": {
+      "label": "success result",
+      "request": "POST /mcp/call",
+      "simulatedStatus": 200,
+      "response": {
+        "tool": "weather_lookup",
+        "isError": false,
+        "content": [{ "type": "text", "text": "Mock weather for Yokohama: sunny, 24°C" }]
+      }
+    },
+    "malformedArguments": {
+      "label": "malformed arguments",
+      "request": "POST /mcp/call",
+      "simulatedStatus": 400,
+      "requestBody": { "name": "weather_lookup", "arguments": {} },
+      "response": {
+        "error": "malformed_arguments",
+        "message": "`arguments.city` must be a non-empty string."
+      }
+    },
+    "toolError": {
+      "label": "tool error",
+      "request": "POST /mcp/call",
+      "simulatedStatus": 500,
+      "requestBody": { "name": "weather_lookup", "arguments": { "city": "__tool_error__" } },
+      "response": {
+        "error": "tool_error",
+        "tool": "weather_lookup",
+        "message": "Intentional mock tool failure."
+      }
+    }
+  }
+}

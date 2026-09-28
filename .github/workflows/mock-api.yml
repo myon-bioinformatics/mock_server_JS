@@ -25,7 +25,7 @@ jobs:
 
       - name: Wait for server
         run: |
-          for i in {1..20}; do
+          for _ in {1..20}; do
             if curl --fail --silent http://127.0.0.1:2250/api/health > /dev/null; then
               exit 0
             fi
